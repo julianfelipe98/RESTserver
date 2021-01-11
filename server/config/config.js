@@ -11,22 +11,13 @@ process.env.NODE_ENV = process.env.NODE_ENV || "dev";
 //base de datos
 /**
  * mongoose config
- */
-// aunque la base de datos no exista mongoose crea la base de datos a la cual se establece la conexion
-// la base de datos aparecera posteriormente a hacer una insercion , si solo se levanta el servidor no necesariamente tiene que aparecer en el robo3t o la consola
-/**
- * conexion de mongo atlas
- * user:julianfelipe98
- * password correo personal:DMjxXvzaoUeAHrbU
- * password institucional:ZTft6XfsoCidSPzq
- * conexion personal:mongodb+srv://julianfelipe98:DMjxXvzaoUeAHrbU@cluster0.qkhzn.mongodb.net/coffee
- * conexion institucional:mongodb+srv://julianfelipe98:ZTft6XfsoCidSPzq@cluster0.mbkyt.mongodb.net/coffee
+ * aunque la base de datos no exista mongoose crea la base de datos a la cual se establece la conexionla base de datos aparecera posteriormente a hacer
+ *  una insercion , si solo se levanta el servidor no necesariamente tiene que aparecer en el robo3t o la consola
  */
 if (process.env.NODE_ENV === "dev") {
   urlDB = "mongodb://localhost:27017/coffee";
 } else {
-  urlDB =
-    "mongodb+srv://julianfelipe98:DMjxXvzaoUeAHrbU@cluster0.qkhzn.mongodb.net/coffee";
+  urlDB =process.env.MONGO_URI;
 }
 mongoose.connect(
   urlDB,

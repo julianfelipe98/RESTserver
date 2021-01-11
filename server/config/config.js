@@ -1,18 +1,40 @@
 const mongoose = require("mongoose");
 let urlDB;
-/**
- * PORT
- */
+
+/* -------------------------------------------------------------------------- */
+/*                                    PORT                                    */
+/* -------------------------------------------------------------------------- */
+
 process.env.PORT = process.env.PORT || 5000;
 
-//entorno
+/* -------------------------------------------------------------------------- */
+/*                                 ENVIROMENT                                 */
+/* -------------------------------------------------------------------------- */
+
 process.env.NODE_ENV = process.env.NODE_ENV || "dev";
 
-//base de datos
+/* -------------------------------------------------------------------------- */
+/*                                  AUTH SEED                                 */
+/* -------------------------------------------------------------------------- */
+
+process.env.SEED=process.env.SEED||'development-seed';
+
+
+/* -------------------------------------------------------------------------- */
+/*                              TOKEN EXPIRATION                              */
+/* -------------------------------------------------------------------------- */
+
+process.env.EXPIRATION_TOKEN="30d";
+
+
+/* -------------------------------------------------------------------------- */
+/*                                  DATA BASE                                 */
+/* -------------------------------------------------------------------------- */
+
 /**
  * mongoose config
  * aunque la base de datos no exista mongoose crea la base de datos a la cual se establece la conexionla base de datos aparecera posteriormente a hacer
- *  una insercion , si solo se levanta el servidor no necesariamente tiene que aparecer en el robo3t o la consola
+ * una insercion , si solo se levanta el servidor no necesariamente tiene que aparecer en el robo3t o la consola
  */
 if (process.env.NODE_ENV === "dev") {
   urlDB = "mongodb://localhost:27017/coffee";

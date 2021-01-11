@@ -7,11 +7,12 @@ const _ = require("underscore");
 const utilities = require("../utilities/utilities");
 const updateValidFiles = ["name", "email", "role", "img", "state"];
 const Deletedstate = { state: false };
+const validateToken = require("../middlewares/authentication").validateToken;
 
-app.get("/", (req, res) => {
+app.get("/",(req, res) => {
   res.send("hello world");
 });
-app.get("/users", (req, res) => {
+app.get("/users",validateToken,(req, res) => {
   let since = req.query.since || 0;
   let limit = req.query.limit || 0;
   // el metodo find me permite traer todos los registros de la coleccion definida

@@ -13,6 +13,17 @@ let validateToken = (req, res, next) => {
   });
 };
 
+/* -------------------------------------------------------------------------- */
+/*                             VALIDATE ADMIN ROLE                            */
+/* -------------------------------------------------------------------------- */
+
+let validateUserRole=(req,res,next)=>{
+  let currentUserRole=req.user.role
+  if (currentUserRole!=='ADMIN_ROLE') return utilities.returnMessage(res,401,false,"need the admin role for this process")
+  next();
+}
+
 module.exports = {
   validateToken,
+  validateUserRole,
 };

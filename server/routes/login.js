@@ -1,9 +1,10 @@
 const express = require("express");
+const app = express();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const app = express();
 const User = require("../models/user");
 const utilities = require("../utilities/utilities");
+
 const userError = "(User) or password are not correct";
 const passwordError = "User or (password) are not correct";
 
@@ -16,8 +17,7 @@ app.post("/login", (req, res) => {
     //  bien sea de usuario o contraseña se le indica al usuario que es alguno de estos dos y no el error especifico
     if (!userDB) return utilities.returnMessage(res, 400, false, userError);
     let passwordMatch = bcrypt.compareSync(body.password, userDB.password);
-    if (!passwordMatch)
-      return utilities.returnMessage(res, 400, false, passwordError);
+    if (!passwordMatch) return utilities.returnMessage(res, 400, false, passwordError);
     let token = createToken(userDB);
     // despues de enviarlo la parte del front deberia guardar el token en local storage
     utilities.returnMessage(res, 200, true, userDB, null,token);

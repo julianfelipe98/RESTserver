@@ -7,12 +7,15 @@ const _ = require("underscore");
 const utilities = require("../utilities/utilities");
 const updateValidFiles = ["name", "email", "role", "img", "state"];
 const Deletedstate = { state: false };
-const validateToken = require("../middlewares/authentication").validateToken;
+const {
+  validateToken,
+  validateUserRole,
+} = require("../middlewares/authentication");
 
-app.get("/",(req, res) => {
+app.get("/", (req, res) => {
   res.send("hello world");
 });
-app.get("/users",validateToken,(req, res) => {
+app.get("/users", validateToken, (req, res) => {
   let since = req.query.since || 0;
   let limit = req.query.limit || 0;
   // el metodo find me permite traer todos los registros de la coleccion definida
@@ -22,12 +25,13 @@ app.get("/users",validateToken,(req, res) => {
     .limit(Number(limit))
     .exec((err, users) => {
       if (err) return utilities.returnMessage(res, 400, false, err);
-      User.countDocuments({ state: true }, (err, count) => {
-        utilities.returnMessage(res, 200, true, users, count);
-      });
+      User.countDocuments({ state: true }, (err, count) =>
+        utilities.returnMessage(res, 200, true, users, count)
+      );
     });
 });
-app.post("/users", (req, res) => {
+
+app.post("/users", [validateToken, validateUserRole], function (req, res) {
   let jsonUser = req.body;
   let user = createUser(jsonUser);
   user.save((err, userDB) => {
@@ -35,7 +39,7 @@ app.post("/users", (req, res) => {
     utilities.returnMessage(res, 200, true, userDB);
   });
 });
-app.put("/users/:id", (req, res) => {
+app.put("/users/:id", [validateToken, validateUserRole], (req, res) => {
   let id = req.params.id;
   // lo que nos permite hacer el pick de la libreria underscore es que nos retorna una copia del objeto con los atributos que yo le mande como parametro dentro del arreglo
   let updatedDocument = _.pick(req.body, updateValidFiles);
@@ -61,7 +65,7 @@ app.put("/users/:id", (req, res) => {
 });
 // hay que tener en cuenta que en produccion por lo general no se borran los elementos completamente de la db sino que como el mismo ejemplo lo aplica se le cambia el atributo que
 //  se tiene definido(para el caso state), que es un booleano de true a false, por lo cual sencillamente el ejemplo con findbyidandremove es solo para ver como funciona el metodo y como se maneja
-app.delete("/users/:id", (req, res) => {
+app.delete("/users/:id", [validateToken, validateUserRole], (req, res) => {
   id = req.params.id;
   User.findByIdAndUpdate(
     id,

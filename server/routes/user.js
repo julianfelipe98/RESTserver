@@ -5,7 +5,7 @@ const app = express();
 const User = require("../models/user");
 const _ = require("underscore");
 const utilities = require("../utilities/utilities");
-const updateValidFiles = ["name", "email", "role", "img", "state"];
+const updateValidFields = ["name", "email", "role", "img", "state"];
 const Deletedstate = { state: false };
 const {
   validateToken,
@@ -42,7 +42,7 @@ app.post("/users", [validateToken, validateUserRole], function (req, res) {
 app.put("/users/:id", [validateToken, validateUserRole], (req, res) => {
   let id = req.params.id;
   // lo que nos permite hacer el pick de la libreria underscore es que nos retorna una copia del objeto con los atributos que yo le mande como parametro dentro del arreglo
-  let updatedDocument = _.pick(req.body, updateValidFiles);
+  let updatedDocument = _.pick(req.body, updateValidFields);
   // con el findByIdAndUpdate podemos de hacerlo de una manera mas facil pero tambien perdemos poder de manejo de errores como si el id no existiera ,
   // por esto si lo utilizamos de esta forma tendriamos que mejorar la parte de la validacion en el front
   // hay que tener en cuenta que si se deja solo los parametros de id body y el cb , retornara como respuesta al put el registro antiguo en la base de datos

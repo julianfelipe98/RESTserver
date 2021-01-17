@@ -39,6 +39,12 @@ const createToken = (userDB) => {
 /* -------------------------------------------------------------------------- */
 /*                            GOOGLE SIGN IN CONFIG                           */
 /* -------------------------------------------------------------------------- */
+/**
+ * google method for verify token and return the user logged in with google data
+ * @date 2021-01-17
+ * @param {String} token
+ * @returns {JSON}
+ */
 async function verify(token) {
   const ticket = await client.verifyIdToken({
     idToken: token,
@@ -47,15 +53,46 @@ async function verify(token) {
     //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
   });
   const payload = ticket.getPayload();
-  console.log(payload.name);
-  console.log(payload.email);
-  console.log(payload.picture);
+  return {
+    name: payload.name,
+    email: payload.email,
+    img: payload.picture,
+    google: true,
+  };
 }
-app.post("/google", (req, res) => {
+app.post("/google", async (req, res) => {
   let token = req.body.idtoken;
-  verify(token);
-  res.json({
-    token,
+  let googleUser = await verify(token).catch((err) => {
+    return utilities.returnMessage(res, 403, false, err);
+  });
+  // user email data base validation
+  User.findOne({ email: googleUser.email }, (err, userDB) => {
+    //error validation
+    if (err) return utilities.returnMessage(res, 500, false, err);
+    if (userDB) {
+      if (userDB.google === false) {
+        // if user already has authenticate in a normal way with the same email is not able to do it with google
+        const AlreadyAuthErr = "Must to authenticate in a normal way";
+        return utilities.returnMessage(res, 400, false, AlreadyAuthErr);
+      } else {
+        //if the user has alredy used that email for authentication so  we just have to renovate the token
+        let token = createToken(userDB);
+        utilities.returnMessage(res, 200, true, userDB, null, token);
+      }
+    } else {
+      // if is the first time that the user authenticate to the platform with that email , we create the user on our db ,and genrete the token
+      let user = new User();
+      user.name = googleUser.name;
+      user.email = googleUser.email;
+      user.img = googleUser.img;
+      user.google = true;
+      user.password = ":)";
+      user.save((err, userDB) => {
+        if (err) return utilities.returnMessage(res, 500, false, err);
+        let token = createToken(userDB);
+        utilities.returnMessage(res, 200, true, userDB, null, token);
+      });
+    }
   });
 });
 

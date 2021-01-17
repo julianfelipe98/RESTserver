@@ -17,15 +17,13 @@ process.env.NODE_ENV = process.env.NODE_ENV || "dev";
 /*                                  AUTH SEED                                 */
 /* -------------------------------------------------------------------------- */
 
-process.env.SEED=process.env.SEED||'development-seed';
-
+process.env.SEED = process.env.SEED || "development-seed";
 
 /* -------------------------------------------------------------------------- */
 /*                              TOKEN EXPIRATION                              */
 /* -------------------------------------------------------------------------- */
 
-process.env.EXPIRATION_TOKEN="30d";
-
+process.env.EXPIRATION_TOKEN = "30d";
 
 /* -------------------------------------------------------------------------- */
 /*                                  DATA BASE                                 */
@@ -39,7 +37,7 @@ process.env.EXPIRATION_TOKEN="30d";
 if (process.env.NODE_ENV === "dev") {
   urlDB = "mongodb://localhost:27017/coffee";
 } else {
-  urlDB =process.env.MONGO_URI;
+  urlDB = process.env.MONGO_URI;
 }
 mongoose.connect(
   urlDB,
@@ -54,3 +52,10 @@ mongoose.connect(
     console.log("Database up");
   }
 );
+
+/* -------------------------------------------------------------------------- */
+/*                              GOOGLE CLIENT ID                              */
+/* -------------------------------------------------------------------------- */
+process.env.CLIENT_ID =
+  process.env.CLIENT_ID ||
+  "876986185994-no67q9a94uvtgb3fibdnf3bnks80i0o8.apps.googleusercontent.com";

@@ -1,7 +1,14 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-const router = require('./routes/router');
+const router = require("./routes/router");
+const path =require("path");
+
+
+
+
+
+
 //config
 require("./config/config");
 
@@ -15,6 +22,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 //global routes
 app.use(router);
+
+/* -------------------------------------------------------------------------- */
+/*                                  SETTINGS                                  */
+/* -------------------------------------------------------------------------- */
+app.use(express.static(path.join(__dirname, "../public")));
 /* -------------------------------------------------------------------------- */
 /*                                   LISTEN                                   */
 /* -------------------------------------------------------------------------- */

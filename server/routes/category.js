@@ -48,12 +48,10 @@ app.get("/categories/:id", validateToken, (req, res) => {
 app.put("/categories/:id", validateToken, (req, res) => {
   let categoryId = req.params.id;
   let updatedCategory = _.pick(req.body, updateValidFields);
-
-  console.log(updatedCategory,categoryId);
   Category.findByIdAndUpdate(
     categoryId,
     updatedCategory,
-    { new: true, runValidators: true },
+    { new: true, runValidators: true, context: "query" },
     (err, categoryDB) => {
       if (err) return utilities.returnMessage(res, 500, false, err);
       if (!categoryDB)

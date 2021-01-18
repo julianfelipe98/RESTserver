@@ -23,7 +23,7 @@ process.env.SEED = process.env.SEED || "development-seed";
 /*                              TOKEN EXPIRATION                              */
 /* -------------------------------------------------------------------------- */
 
-process.env.EXPIRATION_TOKEN = "30d";
+process.env.EXPIRATION_TOKEN = "48h";
 
 /* -------------------------------------------------------------------------- */
 /*                                  DATA BASE                                 */

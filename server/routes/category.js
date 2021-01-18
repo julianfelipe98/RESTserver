@@ -11,17 +11,21 @@ const updateValidFields = ["description"];
 const unexistentCategory = "The category doesnt exist in the system";
 
 app.get("/categories", validateToken, (req, res) => {
-  Category.find({}, "description user").exec((err, categories) => {
-    if (err) return utilities.returnMessage(res, 500, false, err);
-    Category.countDocuments({}, (err, count) => {
+  Category.find({}, "description user")
+    .sort("description")
+    //poputlate nos permite popular la consulta , con esto , si tenemos relacion con  otra tabla nos permitira traer datos de esa tabla que nosotros queramos en la consulta
+    .populate("user", "name email")
+    .exec((err, categories) => {
       if (err) return utilities.returnMessage(res, 500, false, err);
-      utilities.returnMessage(res, 200, true, categories, count);
+      Category.countDocuments({}, (err, count) => {
+        if (err) return utilities.returnMessage(res, 500, false, err);
+        utilities.returnMessage(res, 200, true, categories, count);
+      });
     });
-  });
 });
 
 app.post("/categories", validateToken, (req, res) => {
-  let category = createCategory(req.body);
+  let category = createCategory(req);
   category.save((err, categoryDB) => {
     if (err) return utilities.returnMessage(res, 500, false, err);
     utilities.returnMessage(res, 200, true, categoryDB);
@@ -30,7 +34,7 @@ app.post("/categories", validateToken, (req, res) => {
 
 let createCategory = (jsonCategory) => {
   return new Category({
-    description: jsonCategory.description,
+    description: jsonCategory.body.description,
     user: jsonCategory.user,
   });
 };

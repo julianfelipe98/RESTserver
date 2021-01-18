@@ -25,6 +25,10 @@ This rest server example is implemented with **two enviroments** , the first one
 * www.herokudeploy.com
 
 ---
+##Request Docs
+[DOCS](https://documenter.getpostman.com/view/14133981/TVzViw4f)
+
+---
 
 ##More about technologies and libraries on this proyect
 > - [NodeJS](https://nodejs.org)
@@ -36,4 +40,6 @@ This rest server example is implemented with **two enviroments** , the first one
 > - [JWT](https://jwt.io)
 > - [Google OAuth](https://developers.google.com/identity/sign-in/web/sign-in)
 > - [Heroku](https://heroku.com)
+> - [Underscore](https://underscorejs.org/)
+> - [Mongoose Unique Validator](https://www.npmjs.com/package/mongoose-unique-validator)
 

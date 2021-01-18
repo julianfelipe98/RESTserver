@@ -6,6 +6,7 @@ let Product = require("../models/product");
 const _ = require("underscore");
 const updateValidFields = ["name", "unitPrice", "description"];
 const unexistentProduct = "The category doesnt exist in the system";
+const Deletedstate = { state: false };
 
 app.get("/products", validateToken, (req, res) => {
   Product.find({})
@@ -30,6 +31,21 @@ app.get("/products/:id", validateToken, (req, res) => {
       utilities.returnMessage(res, 200, true, productDB);
     });
 });
+
+app.get("/products/search/:name", validateToken, (req, res) => {
+  let productName = req.params.name;
+//   insensible a las mayusculas y minusculas
+  let regexName=new RegExp(productName,'i');
+  Product.find({ name: regexName })
+    .populate(["user", "category"])
+    .exec((err, products) => {
+      if (err) return utilities.returnMessage(res, 500, false, err);
+      if (!products)
+        return utilities.returnMessage(res, 400, false, unexistentProduct);
+      utilities.returnMessage(res, 200, true, products);
+    });
+});
+
 app.post("/products", validateToken, (req, res) => {
   let product = createProduct(req);
   product.save((err, productDB) => {
@@ -63,12 +79,17 @@ app.put("/products/:id", validateToken, (req, res) => {
 });
 app.delete("/products/:id", validateToken, (req, res) => {
   let productId = req.params.id;
-  Product.findByIdAndRemove(productId, (err, removedProduct) => {
-    if (err) return utilities.returnMessage(res, 500, false, err);
-    if (!removedProduct)
-      return utilities.returnMessage(res, 400, false, unexistentProduct);
-    utilities.returnMessage(res, 200, true, removedProduct);
-  });
+  Product.findByIdAndUpdate(
+    productId,
+    Deletedstate,
+    { new: true, runValidators: true },
+    (err, removedProduct) => {
+      if (err) return utilities.returnMessage(res, 500, false, err);
+      if (!removedProduct)
+        return utilities.returnMessage(res, 400, false, unexistentProduct);
+      utilities.returnMessage(res, 200, true, removedProduct);
+    }
+  );
 });
 
 module.exports = app;

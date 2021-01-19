@@ -1,10 +1,10 @@
 const express = require("express");
 const app = express();
+'use strict';
+require('dotenv').config({path: __dirname+`/.env`})
 const bodyParser = require("body-parser");
 const router = require("./routes/router");
 const path =require("path");
-
-
 
 
 

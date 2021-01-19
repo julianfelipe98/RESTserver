@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 let urlDB;
+const cloudinary = require('cloudinary').v2;
 
 /* -------------------------------------------------------------------------- */
 /*                                    PORT                                    */
@@ -59,3 +60,12 @@ mongoose.connect(
 process.env.CLIENT_ID =
   process.env.CLIENT_ID ||
   "876986185994-no67q9a94uvtgb3fibdnf3bnks80i0o8.apps.googleusercontent.com";
+
+/* -------------------------------------------------------------------------- */
+/*                              CLOUDINARY CONFIG                             */
+/* -------------------------------------------------------------------------- */
+cloudinary.config({ 
+  cloud_name: process.env.CLOUD_NAME, 
+  api_key: process.env.API_KEY, 
+  api_secret: process.env.API_SECRET 
+});

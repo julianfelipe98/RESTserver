@@ -9,6 +9,7 @@ let productSchema = new Schema({
   state: { type: Boolean, required: true, default: true },
   category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
   user: { type: Schema.Types.ObjectId, ref: "User" },
+  img:{type:String,required:false}
 });
 
 productSchema.plugin(uniqueValidator, {

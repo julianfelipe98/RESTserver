@@ -3,6 +3,7 @@ const fileUpload = require("express-fileupload");
 const app = express();
 const utilities = require("../utilities/utilities");
 const noFilesFoundError = "No files found";
+const errors = require("../utilities/errors");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 const validExtentions = ["png", "jpg", "gif", "jpeg", "svg"];
@@ -30,7 +31,7 @@ app.put("/uploads/:type/:id", validateToken, (req, res) => {
   if (validExtentions.includes(fileExtention)) {
     chooseImgType(imgType, req, res, tempPath);
   } else {
-    utilities.returnMessage(res, 400, false, "no valid extention");
+    utilities.returnMessage(res, 400, false, errors.noValidExtension);
     cleanTempFolder(tempPath);
   }
 });
@@ -49,7 +50,7 @@ let chooseImgType = (imgType, req, res, tempPath) => {
 
     default:
       cleanTempFolder(tempPath);
-      return utilities.returnMessage(res, 400, false, "no valid type");
+      return utilities.returnMessage(res, 400, false, errors.noValidType);
       break;
   }
 };
@@ -95,7 +96,7 @@ let saveUserImg = (imgURL, userId, res) => {
 let saveProductImg = (imgURL, productId, res) => {
   Product.findById(productId, (err, productDB) => {
     if (err) return utilities.returnMessage(res, 500, false, err);
-    if (!productDB) return utilities.returnMessage(res, 400, false, "No exist");
+    if (!productDB) return utilities.returnMessage(res, 400, false, errors.noObjFindOnDB);
     productDB.img = imgURL;
     productDB.save((err, updatedUser) => {
       if (err) return utilities.returnMessage(res, 500, false, err);

@@ -1,11 +1,11 @@
 const express = require("express");
 const utilities = require("../utilities/utilities");
+const errors = require("../utilities/errors");
 let { validateToken } = require("../middlewares/authentication");
 let app = express();
 let Product = require("../models/product");
 const _ = require("underscore");
 const updateValidFields = ["name", "unitPrice", "description"];
-const unexistentProduct = "The category doesnt exist in the system";
 const Deletedstate = { state: false };
 
 app.get("/products", validateToken, (req, res) => {
@@ -27,7 +27,7 @@ app.get("/products/:id", validateToken, (req, res) => {
     .exec((err, productDB) => {
       if (err) return utilities.returnMessage(res, 500, false, err);
       if (!productDB)
-        return utilities.returnMessage(res, 400, false, unexistentProduct);
+        return utilities.returnMessage(res, 400, false, errors.noObjFindOnDB);
       utilities.returnMessage(res, 200, true, productDB);
     });
 });
@@ -41,7 +41,7 @@ app.get("/products/search/:name", validateToken, (req, res) => {
     .exec((err, products) => {
       if (err) return utilities.returnMessage(res, 500, false, err);
       if (!products)
-        return utilities.returnMessage(res, 400, false, unexistentProduct);
+        return utilities.returnMessage(res, 400, false, errors.noObjFindOnDB);
       utilities.returnMessage(res, 200, true, products);
     });
 });
@@ -72,7 +72,7 @@ app.put("/products/:id", validateToken, (req, res) => {
     (err, productDB) => {
       if (err) return utilities.returnMessage(res, 500, false, err);
       if (!productDB)
-        return utilities.returnMessage(res, 400, false, unexistentProduct);
+        return utilities.returnMessage(res, 400, false, errors.noObjFindOnDB);
       utilities.returnMessage(res, 200, true, productDB);
     }
   );
@@ -86,7 +86,7 @@ app.delete("/products/:id", validateToken, (req, res) => {
     (err, removedProduct) => {
       if (err) return utilities.returnMessage(res, 500, false, err);
       if (!removedProduct)
-        return utilities.returnMessage(res, 400, false, unexistentProduct);
+        return utilities.returnMessage(res, 400, false, errors.noObjFindOnDB);
       utilities.returnMessage(res, 200, true, removedProduct);
     }
   );

@@ -8,7 +8,7 @@ let app = express();
 let Category = require("../models/category");
 const _ = require("underscore");
 const updateValidFields = ["description"];
-const unexistentCategory = "The category doesnt exist in the system";
+const errors = require("../utilities/errors");
 
 app.get("/categories", validateToken, (req, res) => {
   Category.find({}, "description user")
@@ -44,7 +44,7 @@ app.get("/categories/:id", validateToken, (req, res) => {
   Category.findById(categoryId, (err, categoryDB) => {
     if (err) return utilities.returnMessage(res, 400, false, err);
     if (!categoryDB)
-      return utilities.returnMessage(res, 400, false, unexistentCategory);
+      return utilities.returnMessage(res, 400, false, errors.noObjFindOnDB);
     return utilities.returnMessage(res, 200, true, categoryDB);
   });
 });
@@ -59,7 +59,7 @@ app.put("/categories/:id", validateToken, (req, res) => {
     (err, categoryDB) => {
       if (err) return utilities.returnMessage(res, 500, false, err);
       if (!categoryDB)
-        return utilities.returnMessage(res, 400, false, unexistentCategory);
+        return utilities.returnMessage(res, 400, false, errors.noObjFindOnDB);
       utilities.returnMessage(res, 200, true, categoryDB);
     }
   );
@@ -70,7 +70,7 @@ app.delete("/categories/:id", [validateToken, validateUserRole], (req, res) => {
   Category.findByIdAndRemove(categoryId, (err, categoryDB) => {
     if (err) return utilities.returnMessage(res, 400, false, err);
     if (!categoryDB)
-      return utilities.returnMessage(res, 400, false, unexistentCategory);
+      return utilities.returnMessage(res, 400, false, errors.noObjFindOnDB);
     utilities.returnMessage(res, 200, true, categoryDB);
   });
 });

@@ -1,13 +1,13 @@
 const express = require("express");
 const app = express();
-const path = require("path");
 const User = require("../models/user");
 const Product = require("../models/product");
 const defaultProductImg = "https://res.cloudinary.com/uptc-restserver-jc/image/upload/v1611172334/default-product_s7qk3l.svg";
 const defaultUserImg = "https://res.cloudinary.com/uptc-restserver-jc/image/upload/v1611172320/default-user_bhcaxb.svg";
 const utilities = require("../utilities/utilities");
+const { validateToken } = require("../middlewares/authentication");
 
-app.get("/images/:type/:id", async (req, res) => {
+app.get("/images/:type/:id",validateToken, async (req, res) => {
   //recibe el id , busca en la base de dato y devuelve la imagen del product o del usuario corresponiente
   let type = req.params.type;
   let id = req.params.id;

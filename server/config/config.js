@@ -55,7 +55,7 @@ mongoose.connect(
 );
 
 /* -------------------------------------------------------------------------- */
-/*                              GOOGLE CLIENT ID                              */
+/*                              GOOGLE CLIENT ID OAUTH                         */
 /* -------------------------------------------------------------------------- */
 process.env.CLIENT_ID =
   process.env.CLIENT_ID ||

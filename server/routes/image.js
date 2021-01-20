@@ -15,25 +15,26 @@ app.get("/images/:type/:id", async (req, res) => {
   let img;
   switch (type) {
     case "users":
-      img = findImg(User, id, res);
-      if (!img) img = defaultUserImg;
+      img=await findImg(User,id,res)
+      img=(!img) ? defaultUserImg : img;
       break;
     case "products":
-      img = findImg(Product, id, res);
-      console.log(img);
-      if (!img) img = defaultProductImg;
+      img = await findImg(Product, id, res);
+      img=(!img) ? defaultProductImg : img;
       break;
     default:
       img = defaultImg;
       break;
   }
-  res.sendFile(img);
+  utilities.returnMessage(res,200,true,img)
 });
 let findImg = (Schema, id, res) => {
-  Schema.findById(id, (err, schemaDB) => {
-    if (!schemaDB) return undefined;
-    if (err) return utilities.returnMessage(res, 400, false, err);
-    return schemaDB.img;
+  return new Promise((resolve, reject) => {
+    Schema.findById(id, (err, schemaDB) => {
+      if (!schemaDB) return resolve(undefined);
+      if (err) return reject(utilities.returnMessage(res, 400, false, err));
+      resolve(schemaDB.img);
+    });
   });
 };
 

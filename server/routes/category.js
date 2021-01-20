@@ -1,11 +1,11 @@
 const express = require("express");
 const utilities = require("../utilities/utilities");
-let {
+const {
   validateToken,
   validateUserRole,
 } = require("../middlewares/authentication");
-let app = express();
-let Category = require("../models/category");
+const app = express();
+const Category = require("../models/category");
 const _ = require("underscore");
 const updateValidFields = ["description"];
 const errors = require("../utilities/errors");

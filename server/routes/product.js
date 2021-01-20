@@ -1,8 +1,8 @@
 const express = require("express");
 const utilities = require("../utilities/utilities");
 const errors = require("../utilities/errors");
-let { validateToken } = require("../middlewares/authentication");
-let app = express();
+const { validateToken } = require("../middlewares/authentication");
+const app = express();
 let Product = require("../models/product");
 const _ = require("underscore");
 const updateValidFields = ["name", "unitPrice", "description"];

@@ -8,7 +8,7 @@ let productSchema = new Schema({
   description: { type: String, required: false },
   state: { type: Boolean, required: true, default: true },
   category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
-  user: { type: Schema.Types.ObjectId, ref: "User" },
+  user: { type: Schema.Types.ObjectId, ref: "User",default:"https://res.cloudinary.com/uptc-restserver-jc/image/upload/v1611172334/default-product_s7qk3l.svg"},
   img:{type:String,required:false}
 });
 

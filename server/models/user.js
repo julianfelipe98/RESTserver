@@ -32,6 +32,7 @@ let userSchema = new Schema({
   img: {
     type: String,
     required: [false, "The img is not required"],
+    default:"https://res.cloudinary.com/uptc-restserver-jc/image/upload/v1611172320/default-user_bhcaxb.svg"
   },
   role: {
     type: String,

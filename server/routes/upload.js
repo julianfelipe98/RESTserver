@@ -5,7 +5,7 @@ const utilities = require("../utilities/utilities");
 const noFilesFoundError = "No files found";
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
-const validExtentions = ["png", "jpg", "gif", "jpeg"];
+const validExtentions = ["png", "jpg", "gif", "jpeg", "svg"];
 const User = require("../models/user");
 const Product = require("../models/product");
 const { validateToken } = require("../middlewares/authentication");
@@ -37,20 +37,23 @@ app.put("/uploads/:type/:id", validateToken, (req, res) => {
 let chooseImgType = (imgType, req, res, tempPath) => {
   //faltaria validar que a la hora de guardar la imagen de un producto , este mismo existe previamente en el sistema , porque hasta el momento se
   //  guarda la imagen primero en el servidor y despues se le asigna en la base de datos
-  if (imgType === "users") {
-    let userId = req.user._id;
-    uploadSpecificImage(tempPath, res, userId,saveUserImg);
-  } else {
-    if (imgType === "products") {
+  switch (imgType) {
+    case "users":
+      let userId = req.user._id;
+      uploadSpecificImage(tempPath, res, userId, saveUserImg);
+      break;
+    case "products":
       let productId = req.params.id;
-      uploadSpecificImage(tempPath, res, productId,saveProductImg);
-    } else {
+      uploadSpecificImage(tempPath, res, productId, saveProductImg);
+      break;
+
+    default:
       cleanTempFolder(tempPath);
       return utilities.returnMessage(res, 400, false, "no valid type");
-    }
+      break;
   }
 };
-let uploadSpecificImage = (tempPath, res, id,cb) => {
+let uploadSpecificImage = (tempPath, res, id, cb) => {
   uploadFile(tempPath, res)
     .then((img) => {
       cb(img, id, res);
